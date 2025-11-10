@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     services:
       db:
         image: postgres:13
@@ -39,10 +38,15 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run migrations
+        working-directory: ./ecom
         run: python manage.py migrate
 
       - name: Run tests
+        working-directory: ./ecom
         run: python manage.py test
 
       - name: Build Docker image
         run: docker build -t django-ecom .
+
+      - name: Run Docker container
+        run: docker run -d -p 8000:8000 django-ecom
